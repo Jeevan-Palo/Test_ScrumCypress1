@@ -1,0 +1,63 @@
+version: 2.1
+orbs:
+  # import Cypress orb by specifying an exact version x.y.z
+  # or the latest version 2.x.x using "@1" syntax
+  # https://github.com/cypress-io/circleci-orb
+  cypress: cypress-io/cypress@2
+executors:
+  ci-image:
+    docker:
+      - image: cypress/base:16.14.2
+jobs:
+  # manual step by step configuration
+  e2e-tests:
+    executor: ci-image
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          # https://docs.npmjs.com/cli/ci
+          command: npm ci
+      - run:
+          name: Check Cypress
+          command: npx cypress verify
+      - save_cache:
+          paths:
+            - ~/.npm
+            - ~/.cache
+          key: dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: Run Cypress component tests
+          command: npx cypress run --component
+      - run:
+          name: Start API
+          command: npm run api:start
+          background: true
+      - run:
+          name: Start web application
+          command: npm start
+          background: true
+      - run:
+          name: Run Cypress E2E tests
+          # for demo purposes, only run a single spec
+          command: npx cypress run --spec cypress/e2e/02-adding-items/demo.cy.ts
+workflows:
+  version: 2.1
+  testing:
+    jobs:
+      - e2e-tests
+  orb-testing:
+    jobs:
+      - cypress/run:
+          name: Component and E2E tests
+          # we can use Docker or an executor specified in the orb
+          executor: cypress/base-16-14-2-slim
+          # instead of building the app, run the component tests
+          build: npx cypress run --component
+          start: npm run start:all
+          wait-on: 'http-get://localhost:9100'
+          spec: cypress/e2e/02-adding-items/demo.cy.ts
+          no-workspace: true

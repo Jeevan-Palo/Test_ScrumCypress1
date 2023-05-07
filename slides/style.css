@@ -1,0 +1,12 @@
+img {
+  height: 400px;
+}
+.half-image img {
+  width: 40%;
+}
+code {
+  color: orange;
+}
+strong {
+  color: darkorange;
+}
