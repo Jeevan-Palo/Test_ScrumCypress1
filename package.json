@@ -18,7 +18,7 @@
     "start:all": "run-p start api:start",
     "dev": "start-test start:all 9100 e2e",
     "test": "start-test start:all 9100 cy:run",
-    "jira:electron": "cypress run --group 1x-electron --record  --headless --browser electron"
+    "jira:electron": "cypress run --group 1x-electron --record  --headless --browser electron",
     "cy:run": "cypress run --headless",
     "slides": "vite --strictPort --port 3100",
     "slides:build": "vite build"
