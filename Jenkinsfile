@@ -24,7 +24,8 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 sh 'npm i -g browserslist caniuse-lite --save'
-                sh 'npm run test'
+                sh 'npm run jira:electron'
+                sh 'npx run test'
             }
         }
         stage('e2e Tests') {
