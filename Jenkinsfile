@@ -1,20 +1,12 @@
 pipeline {
     agent {
-        docker {
-            image 'node:18-alpine'
-            args '-p 3000:3000'
-        }
-      docker {
-            image 'cypress/factory:1.0.0'
-        }
-      docker {
-            image 'cypress/base:16.13.0'
-        }
-      docker {
-            image 'cypress/browsers:chrome69'
-        }
+//         docker {
+//             image 'node:18-alpine'
+//             args '-p 3000:3000'
+//         }
       docker {
             image 'cypress/included:9.4.1'
+            args '-p 3000:3000'
         }
     }
     environment {
